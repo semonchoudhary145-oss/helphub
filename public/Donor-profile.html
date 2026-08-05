@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="style/Avail-med.css">
+     <script>
+            function back(){
+                localStorage.removeItem("activeuser");
+                location.href="Dash-donor.html"
+            }
+         </script>
+    <script>
+        function setemail(){
+            document.getElementById("txtEmail").value=localStorage.getItem("activeuser");
+            document.getElementById("txtEmail").readonly=true;
+        }
+    </script>
+
+    <script>
+        function doshowprev(fileCtrl, prev) {
+            const file = fileCtrl.files[0];
+            if (file) {
+                prev.src = URL.createObjectURL(file);
+            }
+        }
+        function doshowprev2(fileCtrl, prev) {
+            const file = fileCtrl.files[0];
+            if (file) {
+                prev.src = URL.createObjectURL(file);
+            }
+        }
+    </script>
+    <script>
+        $(Document).ready(function () {
+            $("#btnajax").click(function () {
+                let obj = {
+                    url: "/get-profile",
+                    data: {
+                        emailKuch: $("#txtEmail").val()
+                    }
+                }
+                $.ajax(obj).then(function (jsonAry) {
+                    alert(JSON.stringify(jsonAry));
+
+                    $("#txtName").val(jsonAry[0].name);
+                    $("#txtMobile").val(jsonAry[0].mobile);
+                    $("#txtAddress").val(jsonAry[0].address);
+                    $("#txtCity").val(jsonAry[0].city);
+                    $("#prev").prop("src", jsonAry[0].acardpath);
+                    $("#prev2").prop("src", jsonAry[0].picpath);
+                    $("#hdn").val(jsonAry[0].acardpath)
+                    $("#hdn2").val(jsonAry[0].picpath)
+                }).fail(function (err) {
+                    alert(err);
+                })
+            })
+        })
+    </script>
+</head>
+
+<body onload="setemail()">
+
+     <!--------------------nav bar----------------------->
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(57, 102, 144);">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white d-flex align-items-center fw-bold fs-5 w-100" href="#">
+                <img src="/pics/websitelogo.jpeg" alt="Logo" class="rounded-circle me-2" width="35" height="35"
+                    class="d-inline-block align-text-top me-2 rounded">
+              <span
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); box-shadow: 0 8px 12px rgba(0,0,0,0.3); ">Help_Hub.com</span>
+                     <!--<span class="text-white fw-bold fs-5 position-absolute top-50 start-50 translate-middle"
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); ">HELLO DONORS 🙋🏻‍♀️</span>-->
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <form class="d-flex gap-3 ms-auto">
+
+
+                <button class="btn btn-outline-light" onclick="back()" type="button">Back</button>
+            </form>
+
+        </div>
+
+    </nav>
+    <div class="container mt-4">
+
+        <div class="ProfileForm2">
+            <h2 class="text-center mb-4" style="color: rgb(32, 74, 114);">DONOR PROFILE</h2>
+ <!-------------------------form start---------------------------------------->
+
+            <form action="/chk-pic" enctype="multipart/form-data" method="post">
+              <input type="hidden" id="hdn" name="hdn">
+               <input type="hidden" id="hdn2" name="hdn2">
+
+
+                <div class="row gx-3 mb-3 align-items-end">
+                    <div class="col-md-8">
+                        <label for="inputEmail4" class="form-label mb-1"><b>Email Id:</b></label>
+                        <input type="email" class="form-control form-control-sm" name="txtEmail" id="txtEmail" placeholder="Enter Email Id" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn text-white btn-sm w-80" style="background-color: rgb(57, 102, 144);" id="btnajax" name="btnajax">Get Profile Data</button>
+                    </div>
+                </div>
+
+
+                <div class="row gx-8 mb-4">
+                    <div class="col-md-4">
+                        <label for="inputName4" class="form-label mb-1"><b>Name:</b></label>
+                        <input type="text" class="form-control form-control-sm" name="txtName" id="txtName" placeholder="Enter Name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="inputMoblie4" class="form-label mb-1"><b>Mobile Number:</b></label>
+                        <input type="tel" class="form-control form-control-sm" name="txtMobile" id="txtMobile" placeholder="Enter Mobile Number" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-5">
+                    <div class="col-md-6">
+                        <label class="form-label mb-1"><b>Address:</b></label>
+                        <input type="text" class="form-control form-control-sm" id="txtAddress" name="txtAddress" placeholder="Enter Address" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label mb-1"><b>City:</b></label>
+                        <input type="text" class="form-control form-control-sm" id="txtCity" name="txtCity"placeholder="Enter City" required>
+                    </div>
+                </div>
+
+                <div class="row g-5 mb-5 justify-content-between">
+                    <!-- Upload Pic 1 -->
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="card p-3 text-center upload-card w-100">
+                            <label class="fw-bold mb-3"><b>📷 Upload Aadhar Card:</b></label>
+                            <input class="form-control custom-file" type="file" name="Aadharpic"
+                                onchange="doshowprev(this,prev)" required>
+                            <center>
+                                <img src="" id="prev" alt="" width="200" height="200" class="preview-img">
+                            </center>
+                        </div>
+                    </div>
+
+                    <!-- Upload Pic 2 -->
+                    <div class="col-md-6 d-flex align-items-center">
+                        <div class="card p-3 text-center upload-card w-100">
+                            <label class="fw-bold mb-3"><b>📷 Upload Profile Pic:</b></label>
+                            <input class="form-control custom-file" type="file" name="Profilepic"
+                                onchange="doshowprev2(this,prev2)" required>
+                            <center>
+                                <img src="" id="prev2" alt="" width="200" height="200" class="preview-img">
+                            </center>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-end mt-3">
+                    <center>
+                        <button type="submit" class="btn btn-sm text-white" style="background-color: rgb(57, 102, 144);">Send to Server</button>
+                        <button type="submit" formaction="/modify-profile" class="btn btn-sm text-white" style="background-color: rgb(57, 102, 144);">Modify My
+                            Profile</button>
+                </div>
+                </center>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

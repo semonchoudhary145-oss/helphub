@@ -1,0 +1,15 @@
+body{
+    background:linear-gradient(135deg,#e0f3fedb) ;
+}
+.table{
+  width:90%;
+        margin: 20px auto;
+        background: rgba(235, 236, 235, 0.832);
+        padding: 50px;
+        border-radius: 20px;
+        margin-bottom: 20px ;
+}
+.cards{
+    width: 18rem;
+    height: 430px;
+}

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style/donor-dash.css">
+    <link rel="stylesheet" href="style/index.css">
+    <script>
+        function logout() {
+            localStorage.removeItem("activeuser");
+            location.href = "index.html"
+        }
+    </script>
+    <script>
+        let myModule = angular.module("modulekuch", []);
+        let myController = myModule.controller("controllerkuch", function ($scope, $http) {
+
+            //-------------------fetch one email-----------------//
+            $scope.dofetch = function () {
+                alert($scope.email);
+                let url = "/fetch-users?emailkeykuch=" + $scope.email;
+                $http.get(url).then(function (resp) {
+                    $scope.jsonarray = resp.data;
+                    console.log(resp.data);
+                    //  alert(JSON.stringify(resp.data))
+
+                }, function (err) {
+                    alert(err);
+                })
+            }
+            //-------------------update pwd-------------------//
+            $scope.doupdatepwd = function () {
+                //alert($scope.pwd);
+                let url = "/updatepwd-users?emailkeykuch=" + $scope.emailid + "&passwordkeykuch=" + $scope.pwd;
+                $http.get(url).then(function (resp) {
+                    $scope.jsonarray = resp.data;
+                    alert(resp.data);
+                    //  alert(JSON.stringify(resp.data))
+
+                }, function (err) {
+                    alert(err);
+                })
+            }
+            //-------------------fetch one email------equip-----------//
+            $scope.dofetchequip = function () {
+                alert($scope.email);
+                let url = "/fetchequip-users?emailkeykuch=" + $scope.email;
+                $http.get(url).then(function (resp) {
+                    $scope.jsonarray = resp.data;
+                    console.log(resp.data);
+                    //  alert(JSON.stringify(resp.data))
+
+                }, function (err) {
+                    alert(err);
+                })
+            }
+
+
+        })
+    </script>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+
+<body ng-app="modulekuch" ng-controller="controllerkuch">
+
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(56, 115, 134);">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white d-flex align-items-center fw-bold fs-5 w-100" href="#">
+                <img src="/pics/websitelogo.jpeg" alt="Logo" class="rounded-circle me-2" width="35" height="35"
+                    class="d-inline-block align-text-top me-2 rounded">
+                <span
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); box-shadow: 0 8px 12px rgba(0,0,0,0.3); ">Help_Hub.com</span>
+                <span class="text-white fw-bold fs-5 position-absolute top-50 start-50 translate-middle"
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); ">HELLO DONORS 🙋🏻‍♀️</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <form class="d-flex gap-3 ms-auto">
+
+
+                <button class="btn btn-outline-light" onclick="logout()" type="button">Logout</button>
+            </form>
+
+        </div>
+
+    </nav>
+    <br>
+
+    <!------------------------cards---------------------------->
+    <br>
+    <div class="container">
+        <div class="row" style="justify-content: center; gap: 30px;">
+
+
+            <div class="col-md-4 mb-4" style="flex: 0 0 30%; max-width: 30%; margin-bottom: 60px !important;">
+                <div class="service-card" style="height: 320px;">
+
+                    <img src="/pics/donorprofile.jpeg" class="card-img" alt=""
+                        style="height: 270px; object-fit: cover;">
+
+                    <div class="overlay">
+
+
+                        <h3>Donor Profile</h3>
+
+                        <a href="/chk-donor" class="btn card-btn">
+                            Get Profile<span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="col-md-4 mb-4" style="flex: 0 0 30%; max-width: 30%;">
+                <div class="service-card" style="height: 320px;">
+
+                    <img src="/pics/availmedicine.jpeg" class="card-img" alt=""
+                        style="height: 270px; object-fit: cover;">
+
+                    <div class="overlay">
+
+
+                        <h3>Avail Medicines</h3>
+
+                        <a href="/chk-avail" class="btn card-btn">
+                            Medicine<span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            <div class="col-md-4 mb-4" style="flex: 0 0 30%; max-width: 30%;">
+                <div class="service-card" style="height: 320px;">
+
+                    <img src="/pics/availequipment.jpeg" class="card-img" alt=""
+                        style="height: 270px; object-fit: cover;">
+
+                    <div class="overlay">
+
+
+                        <h3>Avail Equipment</h3>
+
+                        <a href="/chk-med-equipment" class="btn card-btn">
+                            Equipment<span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row" style="justify-content: center; gap: 30px;">
+            <div class="col-md-4 mb-4" style="flex: 0 0 30%; max-width: 30%;">
+                <div class="service-card" style="height: 320px;">
+
+                    <img src="/pics/medicinemanager.jpeg" class="card-img" alt=""
+                        style="height: 270px; object-fit: cover;">
+
+                    <div class="overlay">
+
+
+                        <h3>Manager</h3>
+
+
+
+                        <button class="btn card-btn text-white" type="button" data-bs-toggle="modal"
+                            data-bs-target="#medmangarModal">Medicine Manager<span>→</span></button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+          
+                <div class="col-md-4 mb-4" style="flex: 0 0 30%; max-width: 30%;">
+
+
+                    <div class="service-card" style="height: 320px;">
+
+                        <img src="/pics/equipmentmanager.jpeg" class="card-img" alt=""
+                            style="height: 270px; object-fit: cover;">
+
+                        <div class="overlay">
+
+
+                            <h3>Manager</h3>
+
+
+
+                            <button class="btn card-btn text-white" type="button" data-bs-toggle="modal"
+                                data-bs-target="#equipmangarModal">Equipment Manager<span>→</span></button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-4 mb-4" style="flex: 0 0 30%; max-width: 30%;">
+                    <div class="service-card" style="height: 320px;">
+
+                        <img src="/pics/settings1.jpeg" class="card-img" alt=""  style="height: 270px; object-fit: cover;">
+
+                        <div class="overlay">
+
+
+                            <h3>Settings</h3>
+
+
+
+                            <button class="btn card-btn text-white" type="button" data-bs-toggle="modal"
+                                data-bs-target="#settingModal">Settings<span>→</span></button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-------------------------------modals------------med manager------------------>
+    <div class="modal fade" id="medmangarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" style="max-width: 95%; ">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: rgb(57, 102, 144);">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Medicine Manager Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row gx-3 mb-3 align-items-end">
+                        <div class="col-md-8">
+                            <label for="inputEmail4" class="form-label mb-1"><b>Email Id:</b></label>
+                            <input type="email" class="form-control form-control-sm" ng-model="email" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-sm w-80 text-white"
+                                style="background-color: rgb(57, 102, 144);" id="btnfetch" name="btnfetch"
+                                ng-click="dofetch();" value="Fetch">
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sr.No</th>
+                            <th scope="col">Emailid</th>
+                            <th scope="col">Medicine Name</th>
+                            <th scope="col">Expiry Date</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Packing</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Information</th>
+                            <th scope="col">Medicine pic</th>
+                            <th scope="col">Operation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr ng-repeat="obj in jsonarray">
+                            <td>{{$index+1}}</td>
+                            <td>{{obj.email}}</td>
+                            <td>{{obj.medname}}</td>
+                            <td>{{obj.expdate}}</td>
+                            <td>{{obj.company}}</td>
+                            <td>{{obj.packing}}</td>
+                            <td>{{obj.qty}}</td>
+                            <td>{{obj.info}}</td>
+                            <td>
+                                <center>
+                                    <img src={{obj.picurl}} width="50" height="50" alt="">
+                                </center>
+                            </td>
+                            <td>
+                                <input type="button" id="btndelete" name="btndelete" value="Delete">
+                            </td>
+
+
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--------------------------modal setting--------------------------->
+    <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: rgb(57, 102, 144);">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Update Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row gx-3 mb-3 align-items-end">
+                        <div class="col-md-10">
+                            <label for="inputEmail4" class="form-label mb-1"><b>Email Id:</b></label>
+                            <input type="email" class="form-control form-control-sm" ng-model="emailid" required>
+                        </div>
+
+                    </div>
+                    <div class="row gx-3 mb-3 align-items-end">
+                        <div class="col-md-10">
+                            <label for="inputEmail4" class="form-label mb-1"><b>Existing Password:</b></label>
+                            <input type="text" class="form-control form-control-sm" ng-model="Password" required>
+                        </div>
+
+                    </div>
+                    <div class="row gx-3 mb-3 align-items-end">
+                        <div class="col-md-10">
+                            <label for="inputEmail4" class="form-label mb-1"><b>New Password:</b></label>
+                            <input type="text" class="form-control form-control-sm" ng-model="pwd" required>
+                        </div>
+
+                    </div>
+                    <center>
+                        <input type="button" class="btn btn-sm w-80 text-white"
+                            style="background-color: rgb(57, 102, 144);" ng-click="doupdatepwd();"
+                            value="Update Password">
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------manager equipment------------------------>
+    <div class="modal fade" id="equipmangarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: rgb(57, 102, 144);">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Equipment Manager Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row gx-3 mb-3 align-items-end">
+                        <div class="col-md-8">
+                            <label for="inputEmail4" class="form-label mb-1"><b>Email Id:</b></label>
+                            <input type="email" class="form-control form-control-sm" ng-model="email"
+                                placeholder="Enter Emailid" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-sm w-80 text-white"
+                                style="background-color: rgb(57, 102, 144);" id="btnfetch" name="btnfetch"
+                                ng-click="dofetchequip();" value="Fetch">
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sr.No</th>
+                            <th scope="col">Emailid</th>
+                            <th scope="col">Equipment</th>
+                            <th scope="col">Condition</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Pic 1</th>
+                            <th scope="col">Pic 2</th>
+                            <th scope="col">Operation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr ng-repeat="obj in jsonarray">
+                            <td>{{$index+1}}</td>
+                            <td>{{obj.emailid}}</td>
+                            <td>{{obj.equipment}}</td>
+                            <td>{{obj.conditionn}}</td>
+                            <td>{{obj.type}}</td>
+                            <td>{{obj.amount}}</td>
+                            <td>
+                                <center>
+                                    <img src={{obj.picurl}} width="50" height="50" alt="">
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    <img src={{obj.pic2url}} width="50" height="50" alt="">
+                                </center>
+                            </td>
+                            <td>
+                                <input type="button" id="btndelete" name="btndelete" value="Delete">
+                            </td>
+
+
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

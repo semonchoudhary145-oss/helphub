@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="style/donor-dash.css">
+
+    <script>
+        function logout() {
+            localStorage.removeItem("activeuser");
+            location.href = "index.html"
+        }
+    </script>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+<!----------signup available or occupied--------------------->
+<script>
+    $(document).ready(function () {
+        $("#txtEmail").blur(function () {
+            let obj = {
+                url: "/check-email",
+                data: {
+                    emailKuch: $("#txtEmail").val()
+                }
+            }
+            $.ajax(obj).then(function (respStr) {
+                $("#msgSpan").html(respStr);
+            }).fail(function (err) {
+                alert(err.responseText);
+            })
+        })
+
+
+        //---------------------signup button---------------------------//
+
+        $("#btnSignup").click(function () {
+
+            if ($("#txtEmail").val().trim() == "" || $("#txtPwd").val().trim() == "" || $("#utype").val() == "Open this select menu") {
+                alert("Please fill all the fields.");
+                return;
+            }
+
+            let valid = true;
+            let regex1 = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!regex1.test($("#txtEmail").val().trim())) {
+                valid = false;
+                alert("Email Invaild");
+
+            }
+            let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+            if (!regex.test($("#txtPwd").val().trim())) {
+                valid = false;
+                alert("Password Invaild");
+
+            }
+            if (valid == false) {
+                return;
+            }
+
+
+            let obj = {
+                url: "/signup-ajax",
+                data: {
+                    emailKuch: $("#txtEmail").val(),
+                    pwdKuch: $("#txtPwd").val(),
+                    utypeKuch: $("#utype").val()
+                }
+            }
+            $.ajax(obj).then(function (respStr) {
+                alert(respStr);
+            }).fail(function (err) {
+                alert(err.responseText);
+
+            });
+        });
+
+
+        //--------------------ajax button---------------------------------//
+
+        $("#btnlogin").click(function () {
+
+            if ($("#txtEmail2").val().trim() == "" || $("#txtPwd2").val().trim() == "") {
+                alert("Please fill all the fields.");
+                return;
+            }
+
+
+            let obj = {
+                url: "/login-ajax",
+                data: {
+                    emailKuchlogin: $("#txtEmail2").val(),
+                    pwdKuchlogin: $("#txtPwd2").val()
+                }
+            };
+            $.ajax(obj).then(function (respStr) {
+                respStr = respStr.trim();
+                alert(respStr);
+
+                localStorage.setItem("activeuser", $("#txtEmail2").val())
+
+                if (respStr == "DONOR") {
+                    localStorage.setItem("utype", "DONOR")
+                    location.href = "/chk-donorprofile"
+                }
+                else if (respStr == "NGO") {
+                    localStorage.setItem("utype", "NGO")
+                    location.href = "/chk-ngodash"
+                }
+                else if (respStr == "NEEDY") {
+                    localStorage.setItem("utype", "NEEDY")
+                    location.href = "/chk-needydash"
+                }
+
+            }).fail(function (err) {
+                alert(err.responseText);
+            })
+        })
+
+        //-------------------regex----vaild or invalid--------------------------//
+        $("#txtEmail").blur(function () {
+            let email = $(this).val();
+            let regex1 = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            let res = regex1.test(email);
+
+            if (res == false) {
+                $("#errEmail").html("Invalid").addClass("notok").removeClass("ok");//addclass instead of css(for large number of data)
+            }
+            else {
+                $("#errEmail").html("Valid").addClass("ok").removeClass("notok");
+            }
+
+        })
+        $("#txtPwd").blur(function () {
+            let pwd = $(this).val();
+            let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+            let res = regex.test(pwd);
+            //  console.log(pwd);
+
+            //   console.log(regex.test(pwd));
+
+            if (res == false) {
+                $("#errPwd").html("Invalid").addClass("notok").removeClass("ok");
+            }
+            else {
+                $("#errPwd").html("Valid").addClass("ok").removeClass("notok");
+            }
+        })
+
+        //------------------eye in password signup------------------------//       
+        $("#eye").click(function () {
+            if ($("#txtPwd").attr("type") == "password") {
+                $("#txtPwd").attr("type", "text");
+                $("#eye").removeClass("fa-eye");
+                $("#eye").addClass("fa-eye-slash");
+            }
+            else {
+                $("#txtPwd").attr("type", "password");
+                $("#eye").removeClass("fa-eye-slash");
+                $("#eye").addClass("fa-eye");
+
+            }
+        })
+
+        //--------------------eye in password login-----------------------//
+        $("#eye2").click(function () {
+            if ($("#txtPwd2").attr("type") == "password") {
+                $("#txtPwd2").attr("type", "text");
+                $("#eye2").removeClass("fa-eye");
+                $("#eye2").addClass("fa-eye-slash");
+            }
+            else {
+                $("#txtPwd2").attr("type", "password");
+                $("#eye2").removeClass("fa-eye-slash");
+                $("#eye2").addClass("fa-eye");
+
+            }
+        })
+    })
+
+
+</script>
+
+
+
+<body>
+    <!-------------------------- nav bar----------------------------------->
+
+    <nav class="navbar navbar-expand-lg"
+        style="background-color: rgb(57, 102, 144); box-shadow: 0 8px 12px rgba(0,0,0,0.3);">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white d-flex align-items-center fw-bold fs-5" href="#">
+                <img src="/pics/websitelogo.jpeg" alt="Logo" class="rounded-circle me-2" width="35" height="35"
+                    class="d-inline-block align-text-top me-2 rounded">
+                <span
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); box-shadow: 0 8px 12px rgba(0,0,0,0.3); ">Help-Hub</span>
+
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <form class="d-flex gap-2 ms-auto">
+
+
+                <button class="btn btn-outline-light" type="button" data-bs-toggle="modal"
+                    data-bs-target="#SignupModal" style="border-radius: 50px;">Signup</button>
+
+                <button class="btn btn-outline-light" type="button" data-bs-toggle="modal"
+                    data-bs-target="#LoginModel" style="border-radius: 50px;">Login</button>
+
+
+
+            </form>
+
+        </div>
+
+    </nav>
+    <br><br>
+
+    <!----------------------------carousel------------------------------>
+    <div class="row">
+        <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel"
+            data-bs-interval="3000" style="border: 2px rgb(57, 102, 144) solid;">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/pics/carou.jpeg" class="d-block w-100" style="height: 420px;" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="/pics/carous1.jpeg" class="d-block w-100" style="height: 420px;" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="/pics/carouse1.jpeg" class="d-block w-100" style="height: 420px;" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+
+    <!---------------------our services----------------------------------->
+    <div class="container mt-5 mb-4 text-center">
+        <div class="d-flex align-items-center justify-content-center">
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+
+            <h2 class="fw-bold mb-0" style="color: rgb(57, 102, 144); letter-spacing: 2px;">
+                OUR SERVICES
+            </h2>
+
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+        </div>
+
+        <p class="text-muted" style="font-size: 14px;">We connect hearts, hands, and hope</p>
+
+    </div>
+
+
+    <!---------------------------------cards------------------------------>
+    <div class="container mt-5">
+
+
+        <div class="row text-center">
+
+            <!-- Card 1: Donor Dashboard -->
+            <div class="col-md-3 mb-4">
+                <div class="service-card">
+
+                    <img src="/pics/donor2.jpeg" class="card-img" alt="">
+
+                    <div class="overlay">
+
+
+                        <h3>Kindness Hub</h3>
+
+                        <a href="/chk-availequip" class="btn card-btn">
+                            For Donors <span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Card 2: NGO Dashboard -->
+            <div class="col-md-3 mb-4">
+                <div class="service-card">
+
+                    <img src="/pics/ngo3.jpeg" class="card-img" alt="">
+
+                    <div class="overlay">
+
+
+                        <h3>Unity Center</h3>
+
+                        <a href="/chk-ngodash" class="btn card-btn">
+                            For NGO's <span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Card 3: Needy Dashboard -->
+            <div class="col-md-3 mb-4">
+                <div class="service-card">
+
+                    <img src="/pics/needy2.jpeg" class="card-img" alt="">
+
+                    <div class="overlay">
+
+
+                        <h3>Care Access</h3>
+
+                        <a href="/chk-needydash" class="btn card-btn">
+                            For Needy's <span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Card 4: Admin Dashboard -->
+            <div class="col-md-3 mb-4">
+                <div class="service-card">
+
+                    <img src="/pics/admin2.jpeg" class="card-img" alt="">
+
+                    <div class="overlay">
+
+
+                        <h3>Operation Hub</h3>
+
+                        <a href="/chk-admindash" class="btn card-btn">
+                            For Admin <span>→</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br>
+
+
+    <!---------------------know us----------------------------------->
+    <div class="container mt-5 mb-4 text-center">
+        <div class="d-flex align-items-center justify-content-center">
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+
+            <h2 class="fw-bold mb-0" style="color: rgb(57, 102, 144); letter-spacing: 2px;">
+                KNOW US
+            </h2>
+
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+        </div>
+
+
+        <p class="text-muted" style="font-size: 14px;">Meet the heart behind the mission</p>
+
+    </div>
+    <br>
+
+
+    <!----------------------------2 cards------------------------->
+    <div class="container-fluid mt-4" style="padding-left: 80px; padding-right: 80px;">
+        <div class="row g-4">
+
+            <!-- Card 1-->
+            <div class="col-md-6 mb-4">
+                <div class="service-card fancy-profile">
+
+                    <div class="profile-img-wrap">
+                        <img src="pics/sir.jpeg" alt="Mr Rajesh" class="profile-img">
+                    </div>
+
+                    <div class="profile-content"> 
+                        <h5 class="profile-tag"><i><u>UNDER THE GUIDANCE OF:</u></i></h5>
+                        <h4 class="profile-name">Mr. Rajesh Bansal</h4>
+                        <p class="profile-role">
+                            <b>Founder & Mentor of</b><br>
+                          <b>Bangalore Computer Education, Bathinda.</b><br>
+                            With his support, we are turning the idea of helping others into reality through Help_Hub.com.
+                        </p>
+                        <p>
+                                    <b>Contact Number: 98722-46056</b>
+                                </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2-->
+              <div class="col-md-6 mb-4">
+                <div class="service-card fancy-profile">
+
+                    <div class="profile-img-wrap">
+                        <img src="/pics/my.jpeg" alt="Mr Rajesh" class="profile-img">
+                    </div>
+
+                    <div class="profile-content"> 
+                        <h5 class="profile-tag"><i><u>MEET THE DEVELOPER:</u></i></h5>
+                        <h4 class="profile-name">Ms. Semon</h4>
+                        <p class="profile-role">
+                           <b>Course: B.Tech(CSE) 3rd Year
+                                    <br>College: GZSCCET, Bathinda</b><br>
+                                    Currently learning Web Development at Bangalore Computer Education.
+                                    Building Help_Hub.com to make healthcare accessible and affordable for everyone.
+                        </p>
+                        <p>
+                                    <b>Contact Number: 83608-11171</b>
+                                </p>
+                    </div>
+                </div>
+            </div>
+          
+
+        </div>
+    </div>
+    <br><br>
+
+
+
+    <!---------------------reach us------------------------------>
+    <div class="container mt-5 mb-4 text-center">
+        <div class="d-flex align-items-center justify-content-center">
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+
+            <h2 class="fw-bold mb-0" style="color: rgb(57, 102, 144); letter-spacing: 2px;">
+                REACH US
+            </h2>
+
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+        </div>
+
+
+        <p class="text-muted" style="font-size: 14px;">Reach out today. Be the reason someone smiles</p>
+    </div>
+    <br>
+
+    <!------------------------Google Map----------------------------->
+
+    <div class="container-fluid px-5 my-4">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2527.2069996140203!2d74.92288221317621!3d30.172842779709264!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39172d0bb1737c33%3A0xed9d3631bdaa7e49!2sGiani%20Zail%20Singh%20Campus%20College%20of%20Engineering%20and%20Technology!5e0!3m2!1sen!2sin!4v1784967493708!5m2!1sen!2sin"
+            width="100%" height="550" style="border: 2px rgb(57, 102, 144) solid;" allowfullscreen="" loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin" width="100%" height="400"
+            style="border:0; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+
+
+    <!---------------------thanks----------------------------->
+    <div class="container mt-5 mb-4 text-center">
+        <div class="d-flex align-items-center justify-content-center">
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+
+            <h2 class="fw-bold mb-0" style="color: rgb(57, 102, 144); letter-spacing: 2px;">
+                THANKYOU FOR VISITING
+            </h2>
+
+            <div style="width: 8px; height: 8px; background: rgb(57, 102, 144); border-radius: 50%; margin: 0 12px;">
+            </div>
+            <div style="width: 50px; height: 2px; background: rgb(57, 102, 144);"></div>
+        </div>
+
+
+        <p class="text-muted" style="font-size: 14px;">Thank you for being a part of our mission</p>
+    </div>
+    </div>
+
+    <!------------------------------SIGN UP  MODAL--------------------------------->
+    <div class="modal fade" id="SignupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  ">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color: rgb(57, 102, 144);">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Signup Form</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+
+                    <div class="text-center mb-4">
+                        <img src="pics/signup2.jpeg" width="180" height="180">
+                    </div>
+
+                    <form>
+                        <div class="mb-3">
+                            <label for="txtEmail" class="form-label">Email Id</label>
+                            <span id="errEmail">*</span>
+                            <input type="email" class="form-control" id="txtEmail" name="txtEmail"
+                                aria-describedby="emailHelp">
+
+                            <span id="msgSpan">*</span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPwd" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="txtPwd">
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-eye fa-beat" id="eye" style="margin-top:6px;"></i>
+                                </span>
+                            </div>
+                            <span id="errPwd">*</span>
+                        </div>
+
+                        <div class="mb-3 ">
+                            User Type
+                            <select class="form-select" id="utype" name="utype" aria-label="Default select example">
+                                <option selected>Open this select menu</option>
+
+                                <option value="NGO">Ngo</option>
+                                <option value="DONOR">Donor</option>
+                                <option value="NEEDY">Needy</option>
+                            </select>
+                        </div>
+
+                    </form>
+                    <!-- sign up form end -->
+                </div>
+                <div class="text-center mb-4">
+
+                    <button type="button" class="btn text-white" style="background-color: rgb(57, 102, 144);"
+                        id="btnSignup">Sign Up Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--------------------------------login modal-------------------------->
+
+    <div class="modal fade" id="LoginModel" tabindex="-1" aria-labelledby="LoginModel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: rgb(57, 102, 144);">
+                    <h1 class="modal-title fs-5" id="LoginModel">Login Form</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="text-center mb-4">
+                        <img src="pics/login.jpeg" width="180" height="180">
+                    </div>
+
+
+                    <form>
+                        <div class="mb-3">
+                            <label for="txtEmail2" class="form-label">Email Id</label>
+                            <input type="email" class="form-control" id="txtEmail2" aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPwd2" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="txtPwd2">
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-eye fa-beat" id="eye2" style="margin-top:6px;"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="text-center">
+
+                    <button type="button" class="btn text-white mb-3" style="background-color: rgb(57, 102, 144);"
+                        id="btnlogin">Login Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

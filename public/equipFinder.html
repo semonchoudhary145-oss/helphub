@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="style/ngo-finder.css">
+     
+  <script>
+            function back(){
+                localStorage.removeItem("activeuser");
+                location.href="Dash-NGO.html"
+            }
+         </script>
+</head>
+<script>
+    let myModule = angular.module("modulekuch", []);
+    let myController = myModule.controller("controllerkuch", function ($scope, $http) {
+        //----------------fetch city ----------------------------//
+        $scope.fetchcity = function () {
+            //alert("function chala");
+            let url = "/fetch-equip-city";
+            $http.get(url).then(function (resp) {
+                // console.log(resp.data);
+                $scope.jsonarraycity = resp.data;
+            }, function (err) {
+                alert(err);
+            })
+        }
+        //--------------fetch equip---------------------------//
+        $scope.fetchequip = function () {
+            //alert("function chala");
+            let url = "/fetch-equipment";
+            $http.get(url).then(function (resp) {
+                // console.log(resp.data);
+                $scope.jsonarrayequip = resp.data;
+            }, function (err) {
+                alert(err);
+            })
+        }
+
+        //-----------------search button get data----------------------//
+
+
+        $scope.searchequip = function () {
+
+            var url = "/search-equipment?city=" + $scope.selcity + "&equipment=" + $scope.selequip + "&type=" + $scope.seltype;
+            console.log(url);
+            $http.get(url).then(function (resp) {
+                $scope.jsonarrayresult = resp.data;
+                console.log("data aya", resp.data);
+                if (resp.data.length == 0) {
+                    alert("Sorry! Equipment Not Available in " + $scope.selcity + " for " + $scope.seltype);
+                }
+            },
+                function (err) {
+                    alert(err);
+                })
+        }
+
+    })
+</script>
+
+<body ng-app="modulekuch" ng-controller="controllerkuch" ng-init="fetchcity(); fetchequip()">
+
+     <!--------------------nav bar----------------------->
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(57, 102, 144);">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white d-flex align-items-center fw-bold fs-5 w-100" href="#">
+                <img src="/pics/websitelogo.jpeg" alt="Logo" class="rounded-circle me-2" width="35" height="35"
+                    class="d-inline-block align-text-top me-2 rounded">
+              <span
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); box-shadow: 0 8px 12px rgba(0,0,0,0.3); ">Help_Hub.com</span>
+                     <!--<span class="text-white fw-bold fs-5 position-absolute top-50 start-50 translate-middle"
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.7); ">HELLO DONORS 🙋🏻‍♀️</span>-->
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <form class="d-flex gap-3 ms-auto">
+
+
+                <button class="btn btn-outline-light" onclick="back()" type="button">Back</button>
+            </form>
+
+        </div>
+
+    </nav>
+
+    <div class="container mt-4">
+
+        <div class="ProfileForm2">
+            <h2 class="text-center mb-4" style="color: rgb(32, 67, 101);">EQUIPMENT FINDER</h2>
+            <br>
+            <div class="row gx-3 mb-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="inputName4" class="form-label mb-1"><b>City:</b></label>
+                    <input type="text" list="city-list" ng-model="selcity" class="form-control "
+                        placeholder="Enter City" required>
+                    <datalist id="city-list">
+                        <option ng-repeat="obj in jsonarraycity" value="{{obj.city}}"></option>
+
+                    </datalist>
+
+                </div>
+                <div class="col-md-3">
+                    <label for="inputName4" class="form-label mb-1"><b>Equipment:</b></label>
+                    <input type="text" list="equip-list" ng-model="selequip" class="form-control "
+                        placeholder="Enter Equipment" required>
+                    <datalist id="equip-list">
+                        <option ng-repeat="obj in jsonarrayequip" value="{{obj.equipment}}"></option>
+
+                    </datalist>
+
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-check">
+                        <input type="radio" name="type" value="wanttobuy" ng-model="seltype" id="type"
+                            class="form-check-input me-2" required>
+                        <label class="form-check-label" for="type"><b>Want to Buy</b></label>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-check">
+                        <input type="radio" name="type" value="borrow" ng-model="seltype" id="type2"
+                            class="form-check-input me-2" required>
+                        <label class="form-check-label" for="type2"><b>Borrow</b></label>
+                    </div>
+                </div>
+                <div class="col-2 text-center ">
+                    <button type="button" ng-click="searchequip()" class="btn text-white w-100" style="background-color: rgb(57, 102, 144);">Search
+                        Equipment</button>
+                </div>
+
+            </div>
+              <br>
+
+            <!-------------------card------------------->
+            <div class="container mt-4" ng-show="jsonarrayresult.length > 0">
+                <div class="row">
+                    <div class="col-md-3 mb-4" ng-repeat="obj in jsonarrayresult">
+                        <div class="card shadow-sm" style="width:16rem; border: 2px black solid;">
+                            <center>
+                                <img src="{{obj.picurl}}" style="width: 100%; height: 180px; object-fit: contain;"
+                                    class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title"><b>Equipment:</b></h5>{{obj.equipment}}</h5>
+                                    <p class="card-text"><b>Type:</b> {{obj.type}}</p>
+                                    <p class="card-text"><b>Amount: Rs.</b> {{obj.amount}}</p>
+                                    <p class="card-text"><b>City:</b> {{obj.city}}</p>
+
+
+                                    <button class="btn text-white" style="background-color: rgb(57, 102, 144);" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#contactequipModal{{$index}}">Contact Donor
+                                    </button>
+                                </div>
+                            </center>
+                        </div>
+
+                        <!-------------------------MODAL------------------------>
+                        <div class="modal fade" id="contactequipModal{{$index}}" tabindex="-1" aria-hidden="true"
+                            data-bs-backdrop="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header text-white" style="background-color: rgb(57, 102, 144);">
+                                        <h1 class="modal-title fs-5">Donor Profile</h1>
+                                        <button type="button" class="btn-close btn-close-white"
+                                            data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-bordered text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sr.No.</th>
+                                                    <th>Emailid</th>
+                                                    <th>Name</th>
+                                                    <th>Mobile</th>
+                                                    <th>City</th>
+                                                    <th>Condition</th>
+
+                                                    <th>Equipment Pic</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{obj.emailid}}</td>
+                                                    <td>{{obj.name}}</td>
+                                                    <td>{{obj.mobile}}</td>
+                                                    <td>{{obj.city}}</td>
+                                                    <td>{{obj.conditionn}}</td>
+
+                                                    <td>
+                                                        <img src="{{obj.pic2url}}" width="80" height="80">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
