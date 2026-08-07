@@ -185,8 +185,8 @@
 }
 
 .card-img-circle-new {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center;
