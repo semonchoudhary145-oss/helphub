@@ -72,13 +72,18 @@
 }
 .service-card.fancy-profile {
     border: 2px solid rgb(57, 102, 144);
-    height: 350px;
     border-radius: 20px;
-    display: flex;
     overflow: hidden;
     transition: all 0.4s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     background: #fff;
+    /* YE 4 LINE NAYI ADD/CHANGE KI */
+    display: flex;
+    flex-direction: column;  /* image upar text niche */
+    align-items: center;     /* center me lane ke liye */
+    text-align: center;      /* text center */
+    padding: 25px 20px;      /* andar space */
+    height: auto;            /* 350px hata diya, auto kar diya */
 }
 
 .service-card.fancy-profile:hover {
@@ -86,28 +91,28 @@
     box-shadow: 0 20px 40px rgba(57, 102, 144, 0.4);
 }
 
-
 .profile-img-wrap {
-    width: 45%;
-    height: 100%;
+    width: 120px;   /* 45% hata ke fix size */
+    height: 120px;  /* 100% hata ke fix size */
+    border-radius: 50%; /* circle */
+    overflow: hidden;
+    margin-bottom: 15px; /* niche text se gap */
+    border: 3px solid rgb(57, 102, 144); /* optional border */
 }
 .profile-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    object-fit: cover; /* circle me fit */
     display: block;
-    padding: 5px;
+    padding: 0; /* 5px padding hata di */
 }
 
 
 .service-card.fancy-profile .profile-content {
-    width: 55%;
-    padding: 25px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #91a4c5 100%) !important; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%; /* 55% hata diya */
+    padding: 0;  /* 25px hata diya */
+    background: transparent; /* gradient hata diya */
+    display: block; /* flex hata diya */
 }
 
 
