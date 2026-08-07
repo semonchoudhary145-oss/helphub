@@ -101,8 +101,10 @@
     border: 3px solid rgb(57, 102, 144); /* optional border */
 }
 .profile-img {
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-position: center top;
     object-fit: cover; /* circle me fit */
     display: block;
     padding: 0; /* 5px padding hata di */
