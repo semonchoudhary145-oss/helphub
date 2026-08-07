@@ -109,7 +109,14 @@
     display: block;
     padding: 0; /* 5px padding hata di */
 }
-
+.profile2-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover; 
+    object-position: center 25%; /* YE wali line face ko upar karegi */
+    display: block;
+}
 
 .service-card.fancy-profile .profile-content {
     width: 100%; /* 55% hata diya */
