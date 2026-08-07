@@ -83,7 +83,9 @@
     align-items: center;     /* center me lane ke liye */
     text-align: center;      /* text center */
     padding: 25px 20px;      /* andar space */
-    height: auto;            /* 350px hata diya, auto kar diya */
+    height: auto;  
+    max-width: 320px;
+    margin: 0 auto;
 }
 
 .service-card.fancy-profile:hover {
